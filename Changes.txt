@@ -1,0 +1,16 @@
+karthipad 1.0.0
+1. Created python based GUI version
+2. Save image as jpg file
+3. drawing in canvas and image file are seperate(not related).
+
+karthipad 0.2.0
+1. Automatically detect resolution of touchpad (approximate detection only).
+2. linear interpolation for continous movement of finger (two point form line, width pixel width 3x3).
+3. linear interpolation with two implementations, (x versus y) and (y versus x)
+4. drawing pixel is put as seperate inline function.
+
+karthipad 0.1.0
+1. track the position of finger and draw a point.
+2. command line input only.
+3. disable mouse movement while drawing.
+

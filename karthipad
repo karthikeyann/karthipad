@@ -1,0 +1,66 @@
+#!/bin/bash
+# Use Bash builtin called type to determine whether a command exists or not
+ 
+# Use full path if possible...
+PATH=$PATH:./
+CMDS="synclient wpad passcmds"
+VERSION="0.2.0"
+for i in $CMDS
+do
+	type -P $i &>/dev/null  && continue  || { echo -e "$i command not found.\n Re-install karthipad."; exit 1; }
+done
+# Add rest of the script as we found all bins in $PATH
+case $# in
+0)
+	file="./hello.bmp"
+	width=1000
+	height=1000
+	;;
+1)
+	if [ "$1" = "-h" ]; then
+		exec >&2; echo -e "karthipad: Usage: karthipad [filename] [width/size] [height]
+Use touchpad to draw/write anything into a bmp image.\ndefault filename is hello.bmp, size is 1000x1000\n
+example:karthipad hello.bmp\n\tkarthipad hello.bmp 1000\n\tkarthipad hello.bmp 1000 800"; exit 0
+	fi
+	if [ "$1" = "-v" ]; then
+		echo $VERSION; exit 0
+	fi
+	file=$1
+        WI=`synclient -l | grep -w RightEdge | sed 's/.*= \([0-9]*\).*/\1/'`
+	HI=`synclient -l | grep -w BottomEdge | sed 's/.*= \([0-9]*\).*/\1/'`
+	let width= $WI*2
+	let height= $HI*2
+	;;
+2)
+	file=$1
+	if ! [[ "$2" =~ ^[0-9]+$ ]] ; then
+	   exec >&2; echo -e "karthipad: Argument error\n width , height should be numbers"; exit 1
+	fi
+	width=$2
+	height=$2
+	;;
+3)
+	file=$1
+	if ! [[ "$2" =~ ^[0-9]+$ ]] ; then
+		if ! [[ "$3" =~ ^[0-9]+$ ]] ; then
+		   exec >&2; echo -e "karthipad: Argument error\n width , height should be numbers"; exit 1
+		fi
+	   exec >&2; echo -e "karthipad: Argument error\n width  should be a number"; exit 1
+	fi
+	if ! [[ "$3" =~ ^[0-9]+$ ]] ; then
+	   exec >&2; echo -e "karthipad: Argument error\n height should be a number"; exit 1
+	fi
+	width=$2
+	height=$3
+	;;
+*)
+	echo -e "karthipad: Syntax error\n Try 'karthipad filename.bmp #width #height'"
+	exit 1;
+	;;
+esac
+echo -e "Draw/write on touchpad\nAfter finished drawing, type 'q' to save & quit"
+synclient TouchpadOff=1
+(synclient -m 1 & passcmds) | wpad $file $width $height 1
+synclient TouchpadOff=0
+## AUTHOR: Karthikeyan N
+## Mail  : karthi.amrita.cbe@gmail.com
