@@ -84,6 +84,5 @@ Modules used:
 About Author
 ============
 Karthikeyan.N
-- Email: karthi.amrita.cbe@gmail.com
 - Website:techbird.wordpress.com
 - Twitter: www.twitter.com/lxkarthi
